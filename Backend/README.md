@@ -1,0 +1,2 @@
+gcloud builds submit --tag europe-west10-docker.pkg.dev/weighty-arch-443718-f5/chatbot-ai/chatbot-server
+gcloud run deploy chatbot-server --image europe-west10-docker.pkg.dev/weighty-arch-443718-f5/chatbot-ai/chatbot-server:latest --region europe-west10

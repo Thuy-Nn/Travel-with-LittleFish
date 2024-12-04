@@ -1,6 +1,6 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
-from BaseModel import BaseModel
+from Backend.models.BaseModel import BaseModel
 
 
 class QwenModel(BaseModel):
