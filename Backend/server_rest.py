@@ -5,8 +5,14 @@ from MODEL_ZOO import MODEL_ZOO
 app = Flask(__name__)
 
 # Load the model and tokenizer
-MODEL_TYPE = 'Qwen'
-MODEL_NAME = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
+MODEL_TYPE = "Llama"
+MODEL_NAME = "Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+# MODEL_TYPE = "OpenAI"
+# MODEL_NAME = "gpt-4o-mini-2024-07-18"
+# MODEL_TYPE = "Qwen"
+# MODEL_NAME = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
+# Load the model and tokenizer
+
 model = None
 
 

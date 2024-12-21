@@ -59,21 +59,26 @@
 </head>
 <body>
 <div id="chat-container"></div>
-<div id="input-container">
+<form id="input-container">
     <input type="text" id="message-input" placeholder="Type your message here..."/>
-    <button id="send-button">Send</button>
-</div>
+    <button id="send-button" type="submit">Send</button>
+</form>
 
 <script>
     const chatContainer = document.getElementById('chat-container');
+    const inputContainer = document.getElementById('input-container');
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
 
-    const socket = new WebSocket('ws://localhost:8001');
+    const socket = new WebSocket('ws://localhost:8003');
 
     socket.addEventListener('message', function (event) {
         addMessage(event.data, 'bot-message');
     });
+
+    inputContainer.addEventListener('submit', function (e) {
+        e.preventDefault();
+    })
 
     sendButton.addEventListener('click', async () => {
         const userMessage = messageInput.value.trim();

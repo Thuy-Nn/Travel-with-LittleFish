@@ -1,11 +1,20 @@
 import asyncio
-import websockets
+
+import yaml
 from websockets.asyncio.server import serve
+
 from MODEL_ZOO import MODEL_ZOO
 
+config = yaml.safe_load(open("config.yaml"))
+
 # Load the model and tokenizer
-MODEL_TYPE = 'Qwen'
-MODEL_NAME = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
+MODEL_TYPE = "OpenAI"
+MODEL_NAME = "gpt-4o-mini-2024-07-18"
+# MODEL_TYPE = "Llama"
+# MODEL_NAME = "Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+# MODEL_TYPE = "Qwen"
+# MODEL_NAME = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
+
 model = None
 
 
@@ -23,7 +32,6 @@ async def handler(websocket):
             if MODEL_TYPE not in MODEL_ZOO:
                 await websocket.send("Model type is not supported")
                 return
-
             model = MODEL_ZOO[MODEL_TYPE](MODEL_NAME)
 
         if model is None:
@@ -35,13 +43,9 @@ async def handler(websocket):
 
 
 async def main():
-    async with serve(handler, '', 8080):
+    async with serve(handler, config['ENV']['host'], config['ENV']['port']):
+        print(f"Socket server is listening at {config['ENV']['host']}:{config['ENV']['port']}")
         await asyncio.get_running_loop().create_future()
-
-
-# start_server = serve(handler, "localhost", 8000)
-# asyncio.get_event_loop().run_until_complete(start_server)
-# asyncio.get_event_loop().run_forever()
 
 
 if __name__ == '__main__':

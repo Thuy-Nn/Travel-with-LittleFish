@@ -1,0 +1,6 @@
+numpy
+torch
+openai
+gpt4all
+chromadb
+# transformers
