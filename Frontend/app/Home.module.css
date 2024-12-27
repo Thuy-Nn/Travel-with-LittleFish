@@ -1,0 +1,144 @@
+.travelPage {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.leftSidebar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--sidebar-width);
+}
+
+.mainContent {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--sidebar-width);
+    right: 0;
+}
+
+.headerContainer {
+    position: absolute;
+    top: 0;
+    height: var(--header-height);
+    left: 0;
+    right: 0;
+
+}
+
+.historyContainer {
+    position: absolute;
+    bottom: 0;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+}
+
+.toolbarPanel {
+    position: absolute;
+    top: 0;
+    height: var(--header-height);
+    left: 0;
+    right: 0;
+}
+
+.chatContainer {
+    position: absolute;
+    top: var(--header-height);
+    bottom: var(--input-height);
+    left: 0;
+    right: 0;
+}
+
+.inputContainer {
+    position: absolute;
+    bottom: 0;
+    height: var(--input-height);
+    left: 0;
+    right: 0;
+}
+
+.headerContainer,
+.historyContainer,
+.toolbarPanel,
+.chatContainer,
+.inputContainer {
+    padding: var(--spacing);
+    box-sizing: border-box;
+    border: 1px dashed rgba(100, 100, 100, 0.2);
+}
+
+
+/* Header */
+.headerIcon {
+    vertical-align: middle; /*can giua chieu doc*/
+    height: 32px;
+}
+
+.headerTitle {
+    vertical-align: middle;
+    /*margin: tu border/vien ra ngoai
+      padding: tu border vao trong*/
+    margin-left: 12px;
+    font-size: 14pt;
+    font-weight: 700; /* in dam chu */
+    text-transform: uppercase;
+}
+
+/* Toolbar */
+.toolbarIconContainer {
+    position: absolute;
+    top: 18px;
+    right: 12px;
+}
+
+.toolbarIcon {
+    margin-left: 24px;
+    font-size: 18pt;
+}
+
+
+/* History */
+.historyItem {
+    /*tren duoi 6, trai phai 0*/
+    padding: 6px 0;
+}
+
+/* Chat */
+.chatPanel {
+
+}
+
+/*Input*/
+.messageTextbox {
+    position: absolute;
+    font-size: 14pt;
+    top: 8px;
+    bottom: 8px;
+    left: 12px;
+    right: 64px;
+    padding: 0 12px;
+    background-color: var(--bg-element-color);
+    border-radius: 8px;
+}
+
+/*
+hover: di chuot sang mau
+active: click vao xuat hien mau
+focus: chuot o dau no sang mau luon
+*/
+.messageTextbox:active, .messageTextbox:focus {
+}
+
+.sendButton{
+    position: absolute;
+    top: 10px;
+    bottom: 16px;
+    right: 12px;
+    font-size: 24pt;
+}

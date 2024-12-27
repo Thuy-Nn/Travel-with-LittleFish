@@ -1,0 +1,53 @@
+:root {
+  --accent-color: skyblue;
+  --background--color: #ffffff;
+  --foreground--color: #171717;
+  --border-color: #cccccc;
+  --bg-element-color: #f0f0f0;
+  --sidebar-width: 300px;
+  --header-height: 60px;
+  --input-height: 60px;
+  --spacing: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background--color: #0a0a0a;
+    --foreground--color: #ededed;
+    --border-color: #333333;
+    --bg-element-color: #232323;
+  }
+}
+
+body {
+  color: var(--foreground--color);
+  background: var(--background--color);
+  font-family: var(--font-default), Helvetica, sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  appearance: none;
+  background: none;
+  border: none;
+  outline: none;
+  color: inherit;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+button:hover {
+  color: var(--accent-color);
+}
+
+input {
+  appearance: none;
+  background: none;
+  outline: none;
+  border: none;
+  color: inherit;
+  /*transition: tao hieu ung chuyen doi*/
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
