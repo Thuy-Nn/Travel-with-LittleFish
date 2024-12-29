@@ -1,0 +1,91 @@
+.flightItemOuter {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background-color: var(--bg-element-color);
+}
+
+.flightItemLeftView {
+    display: inline-block;
+    width: 80%;
+    box-sizing: border-box;
+    vertical-align: middle;
+    border-right: 1px solid var(--border-color);
+}
+
+.flightItemRightView {
+    display: inline-block;
+    width: 20%;
+    box-sizing: border-box;
+    vertical-align: middle;
+    padding: 0 12px;
+    text-align: center;
+}
+
+.flightTotalDuration {
+    margin-bottom: 12px;
+}
+
+.flightTotalDurationText {
+    margin-right: 6px;
+    opacity: 0.5;
+}
+
+.flightDetails {
+    margin-bottom: 12px;
+}
+
+.flightCarrier,
+.flightTime,
+.flightDuration {
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.flightCarrier {
+    width: 40%;
+}
+
+.flightCarrierCode {
+    /*font-size: x-large;*/
+    color: hotpink;
+    font-weight: bold;
+}
+
+.flightCarrierName {
+    font-size: smaller;
+    /*opacity: 0.5;*/
+}
+
+.flightTime {
+    width: 45%;
+}
+
+.flightTimeHour {
+    font-weight: bold;
+}
+
+.flightPlace {
+    font-size: smaller;
+}
+
+.flightDuration {
+    display: inline-block;
+    box-sizing: border-box;
+    font-weight: bold;
+    width: 15%;
+}
+
+.flightPrice {
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.flightIcon {
+    margin: 0 8px;
+    vertical-align: middle;
+    opacity: 0.5;
+}

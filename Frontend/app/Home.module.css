@@ -28,7 +28,6 @@
     height: var(--header-height);
     left: 0;
     right: 0;
-
 }
 
 .historyContainer {
@@ -53,6 +52,7 @@
     bottom: var(--input-height);
     left: 0;
     right: 0;
+    overflow: auto; /* scrollbar */
 }
 
 .inputContainer {
@@ -110,9 +110,37 @@
 }
 
 /* Chat */
-.chatPanel {
-
+.chatItem {
+    margin: 12px 0;
 }
+
+.chatItemInner {
+    /*resize based on its content*/
+    display: inline-block;
+    max-width: 80%;
+    padding: 12px;
+    border-radius: 8px;
+    line-height: 24px;
+}
+
+.chatItem__user {
+    text-align: right;
+}
+
+.chatItem__server {
+    text-align: left;
+}
+
+.chatItem__user .chatItemInner {
+    background-color: var(--bg-element-color);
+}
+
+.chatIcon {
+    margin-top: 4px;
+    vertical-align: top; /*can giua chieu doc*/
+    height: 36px;
+}
+
 
 /*Input*/
 .messageTextbox {
