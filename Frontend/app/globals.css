@@ -2,26 +2,23 @@
   --accent-color: skyblue;
   --background--color: #ffffff;
   --foreground--color: #171717;
+  --dim-foreground-color: #888888;
   --border-color: #cccccc;
   --bg-element-color: #f0f0f0;
-  --sidebar-width: 300px;
+  --sidebar-width: 180px;
   --header-height: 60px;
   --input-height: 60px;
   --spacing: 12px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background--color: #0a0a0a;
-    --foreground--color: #ededed;
-    --border-color: #333333;
-    --bg-element-color: #222222;
-  }
-}
-
-@function --scrollbar {
-
-}
+/*@media (prefers-color-scheme: dark) {*/
+/*  :root {*/
+/*    --background--color: #0a0a0a;*/
+/*    --foreground--color: #ededed;*/
+/*    --border-color: #333333;*/
+/*    --bg-element-color: #222222;*/
+/*  }*/
+/*}*/
 
 body {
   color: var(--foreground--color);
@@ -37,6 +34,7 @@ button {
   border: none;
   outline: none;
   color: inherit;
+  font-family: inherit;
   cursor: pointer;
   transition: color 0.3s;
 }
@@ -58,5 +56,17 @@ input {
   color: inherit;
   /*transition: tao hieu ung chuyen doi*/
   transition: background-color 0.3s, border-color 0.3s;
+}
+
+.icon__left {
+  vertical-align: baseline;
+  margin-right: 4px;
+  color: var(--dim-foreground-color);
+}
+
+.icon__right {
+  vertical-align: baseline;
+  margin-left: 4px;
+  color: var(--dim-foreground-color);
 }
 

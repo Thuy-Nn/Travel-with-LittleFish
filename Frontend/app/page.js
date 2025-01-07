@@ -4,7 +4,8 @@ import _ from './Home.module.css'
 import {useState, useEffect, useRef} from 'react'
 import {CONTENT_TYPE} from '@/app/const/CONTENT_TYPE'
 import FlightView from '@/app/components/FlightsView'
-import responseData from './data/flight.json'
+import ActivitiesView from '@/app/components/ActivitiesView'
+import responseData from './data/activities.json'
 
 
 export default function Home() {
@@ -91,7 +92,7 @@ export default function Home() {
       // return
     }
     if (data.type === CONTENT_TYPE.activities) {
-      // return
+      return <ActivitiesView responseContent={data.content}/>
     }
   }
 
@@ -111,14 +112,14 @@ export default function Home() {
         </div>
       </div>
       <div className={_.mainContent}>
-        <div className={_.toolbarPanel}>
-          <span>Status: {statusMessage}</span>
-          <div className={_.toolbarIconContainer}>
-            <button className={_.toolbarIcon + ' icon-heart'} onClick={favoriteHandler}/>
-            <button className={_.toolbarIcon + ' icon-settings'} onClick={settingsHandler}/>
-            <button className={_.toolbarIcon + ' icon-user'} onClick={userHandler}/>
-          </div>
-        </div>
+        {/*<div className={_.toolbarPanel}>*/}
+        {/*  <span>Status: {statusMessage}</span>*/}
+        {/*  <div className={_.toolbarIconContainer}>*/}
+        {/*    <button className={_.toolbarIcon + ' icon-heart'} onClick={favoriteHandler}/>*/}
+        {/*    <button className={_.toolbarIcon + ' icon-settings'} onClick={settingsHandler}/>*/}
+        {/*    <button className={_.toolbarIcon + ' icon-user'} onClick={userHandler}/>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
         <div className={_.chatContainer}>
           {chatMessages ? chatMessages.map((item, index) =>
             <div key={index}

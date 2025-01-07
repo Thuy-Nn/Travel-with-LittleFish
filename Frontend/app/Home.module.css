@@ -48,11 +48,13 @@
 
 .chatContainer {
     position: absolute;
-    top: var(--header-height);
+    /*top: var(--header-height);*/
+    top: 0;
     bottom: var(--input-height);
     left: 0;
     right: 0;
-    overflow: auto; /* scrollbar */
+    overflow: auto; /* enable scrollbar */
+    scrollbar-color: var(--border-color) var(--background--color);
 }
 
 .inputContainer {
@@ -117,7 +119,7 @@
 .chatItemInner {
     /*resize based on its content*/
     display: inline-block;
-    max-width: 80%;
+    max-width: 60%;
     padding: 12px;
     border-radius: 8px;
     line-height: 24px;
@@ -170,3 +172,4 @@ focus: chuot o dau no sang mau luon
     right: 12px;
     font-size: 24pt;
 }
+

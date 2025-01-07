@@ -46,7 +46,15 @@
 }
 
 .flightCarrier {
-    width: 40%;
+    width: 20%;
+}
+
+.flightTime {
+    width: 45%;
+}
+
+.flightDuration {
+    width: 15%;
 }
 
 .flightCarrierCode {
@@ -55,13 +63,13 @@
     font-weight: bold;
 }
 
+.flightCarrierLogo {
+    width: 50px;
+}
+
 .flightCarrierName {
     font-size: smaller;
     /*opacity: 0.5;*/
-}
-
-.flightTime {
-    width: 45%;
 }
 
 .flightTimeHour {
@@ -76,7 +84,6 @@
     display: inline-block;
     box-sizing: border-box;
     font-weight: bold;
-    width: 15%;
 }
 
 .flightPrice {

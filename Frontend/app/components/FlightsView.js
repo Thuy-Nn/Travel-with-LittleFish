@@ -32,8 +32,10 @@ function FlightItem({id, itineraries, price, dictionaries}) {
         </div>
         {itiner.segments.map((seg, j) => <div key={'seg-' + j} className={_.flightDetails}>
             <div className={_.flightCarrier}>
-              <div className={_.flightCarrierCode}>{seg.carrierCode}</div>
-              <div className={_.flightCarrierName}>{dictionaries['carriers'][seg.carrierCode]}</div>
+              {/*<div className={_.flightCarrierCode}>{seg.carrierCode}</div>*/}
+              <img className={_.flightCarrierLogo} title={dictionaries['carriers'][seg.carrierCode]}
+                   src={`https://content.r9cdn.net/rimg/provider-logos/airlines/v/${seg.carrierCode}.png`}/>
+              {/*<div className={_.flightCarrierName}>{dictionaries['carriers'][seg.carrierCode]}</div>*/}
             </div>
             <div className={_.flightTime}>
               <div className={_.flightTimeHour}>{formatTime(seg.departure.at)} - {formatTime(seg.arrival.at)}</div>
