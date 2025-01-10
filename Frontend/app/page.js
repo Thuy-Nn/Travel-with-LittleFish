@@ -5,7 +5,7 @@ import {useState, useEffect, useRef} from 'react'
 import {CONTENT_TYPE} from '@/app/const/CONTENT_TYPE'
 import FlightView from '@/app/components/FlightsView'
 import ActivitiesView from '@/app/components/ActivitiesView'
-import responseData from './data/activities.json'
+import HotelsView from '@/app/components/HotelsView'
 
 
 export default function Home() {
@@ -18,14 +18,22 @@ export default function Home() {
   const [historyItems, setHistoryItems] = useState(null)
   const [inputMessage, setInputMessage] = useState('')
   const [chatMessages, setChatMessages] = useState([])
+  const [processing, setProcessing] = useState(false)
 
   // useRef: luu gia tri co dinh sau moi lan render
   const _socketConnection = useRef(null)
 
   // useEffect: ham load websocket run voi dieu kien trong [] --> khi [] rong thi chi chay 1 lan
   useEffect(() => {
-    // _socketConnection.current = new WebSocket('ws://localhost:8004')
-    // _socketConnection.current.addEventListener('message', receiveMessage) // addEventListener theo doi
+    _socketConnection.current = new WebSocket('ws://localhost:8009')
+    // addEventListener theo doi
+    _socketConnection.current.addEventListener('open', () => {
+      console.log('WebSocket connection opened')
+    })
+    _socketConnection.current.addEventListener('error', e => {
+      console.log('Connection Error:', e)
+    })
+    _socketConnection.current.addEventListener('message', receiveMessage)
 
     receiveMessage()
 
@@ -64,24 +72,42 @@ export default function Home() {
 
     setChatMessages(currentMessages => [...currentMessages, {
       'role': 'user',
-      'data': inputMessage
+      'data': {
+        type: 'text',
+        content: inputMessage
+      }
     }])
     setInputMessage('')
 
     // send inputMessage to server
     _socketConnection.current.send(inputMessage)
+    setProcessing(true)
   }
 
   const receiveMessage = e => {
-    // const responseData = e.data
+    // console.log('Received Message:', e)
+    if (!e) return
+    if (!e.data) return
+
+    const responseData = JSON.parse(e.data)
+    console.log(responseData)
 
     setChatMessages(currentMessages => [...currentMessages, {
       'role': 'server',
       'data': responseData
     }])
+    setProcessing(false)
   }
 
   const renderContent = data => {
+    if (!data) return null
+
+    if (!data.content) return null
+
+    if (data.content['errors']) {
+      return <span>Sorry, I don't understand.</span>
+    }
+
     if (data.type === CONTENT_TYPE.text) {
       return <span>{data.content}</span>
     }
@@ -89,7 +115,7 @@ export default function Home() {
       return <FlightView responseContent={data.content}/>
     }
     if (data.type === CONTENT_TYPE.hotels) {
-      // return
+      return <HotelsView responseContent={data.content}/>
     }
     if (data.type === CONTENT_TYPE.activities) {
       return <ActivitiesView responseContent={data.content}/>
@@ -129,6 +155,10 @@ export default function Home() {
                 {renderContent(item.data)}
               </div>
             </div>) : null}
+          {processing && <div className={_.chatItem + ' ' + _.chatItem__server}>
+            <img src="favicon.ico" className={_.chatIcon}/>
+            <img src="loading.gif" className={_.processingGif}/>
+          </div>}
         </div>
         <div className={_.inputContainer}>
           {/*form submit he thong mac dinh kem an enter*/}

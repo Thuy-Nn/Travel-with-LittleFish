@@ -1,12 +1,13 @@
 import _ from '../styles/ActivitiesView.module.css'
 import {useState} from 'react'
+import StarRating from '@/app/components/StarRating'
 
 
-export default function ActivitiesView({responseContent, max = 5}) {
+export default function ActivitiesView({responseContent, max = 10}) {
   // console.log(responseContent)
   if (!responseContent) return null
 
-  // Convert object to array and limit the number of items
+  // Convert object to array
   const activitiesArray = Object.values(responseContent).filter((item) => typeof item === "object")
   // console.log(activitiesArray)
 
@@ -22,24 +23,6 @@ export default function ActivitiesView({responseContent, max = 5}) {
   </div>
 }
 
-
-function StarRating({ rating }) {
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
-    if (i <= Math.floor(rating)) {
-      // Full star
-      stars.push(<span key={i} className={_.icon + ' icon-star-full'}/>);
-    } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
-      // Half star (only if rating is not an integer)
-      stars.push(<span key={i} className={_.icon + ' icon-star-half'}/>);
-    } else {
-      // Empty star
-      stars.push(<span key={i} className={_.icon + ' icon-star-empty'}/>);
-    }
-  }
-  return <span>{stars}</span>;
-}
-
 function ActivitiesItem({name, address, rating, weekday_text, image_url}) {
   const [showOpeningHours, setShowOpeningHours] = useState(false)
 
@@ -48,20 +31,20 @@ function ActivitiesItem({name, address, rating, weekday_text, image_url}) {
   }
 
 
-  return <div className={_.ActivitiesItemOuter}>
-    <div className={_.ActivitiesItemLeftView}>
-      <div className={_.ActivitiesName}>
+  return <div className={_.activitiesItemOuter}>
+    <div className={_.activitiesItemLeftView}>
+      <div className={_.activitiesName}>
         <span>{name}</span>
       </div>
-      <div className={_.ActivitiesAdress}>
+      <div className={_.activitiesAddress}>
         <span className='icon__left icon-map-pin'/>
         <span>{address}</span>
       </div>
-      <div className={_.ActivitiesRating}>
+      <div className={_.activitiesRating}>
         <StarRating rating={rating}/>
         <span> {rating}</span>
       </div>
-      <div className={_.Weekday_text}>
+      <div className={_.weekday_text}>
         <button className={_.openingHoursButton} onClick={toggleOpeningHours}>
           <span>Opening Hours</span>
           <span className={_.openingHoursIcon + (showOpeningHours ? ' icon-chevron-up' : ' icon-chevron-down')}/>
@@ -70,15 +53,15 @@ function ActivitiesItem({name, address, rating, weekday_text, image_url}) {
           weekday_text.map((text, index) => {
             const [day, time] = text.split(": "); // Split into day and time
             return (
-              <div key={index} className={_.Weekday_text}>
-                <span className={_.Weekday}>{day}: </span>
-                <span className={_.Timeday}>{time}</span>
+              <div key={index} className={_.weekday_text}>
+                <span className={_.weekday}>{day}: </span>
+                <span className={_.timeday}>{time}</span>
               </div>
             );
           })}
       </div>
     </div>
-    <div className={_.ActivitiesItemRightView}>
+    <div className={_.activitiesItemRightView}>
       <div className={_.thumbnailImg} style={{backgroundImage: `url("${image_url}")`}}/>
     </div>
   </div>
