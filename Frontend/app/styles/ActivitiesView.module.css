@@ -1,4 +1,4 @@
-.ActivitiesItemOuter {
+.activitiesItemOuter {
     position: relative;
     display: inline-block;
     width: 100%;
@@ -9,14 +9,14 @@
     overflow: hidden;
 }
 
-.ActivitiesItemLeftView {
+.activitiesItemLeftView {
     display: inline-block;
     width: 60%;
     box-sizing: border-box;
     vertical-align: middle;
 }
 
-.ActivitiesItemRightView {
+.activitiesItemRightView {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -26,37 +26,37 @@
     overflow: hidden;
 }
 
-.ActivitiesName {
+.activitiesName {
     font-size: x-large;
     font-weight: bold;
     margin-bottom: 8px;
 }
 
-.ActivitiesAdress {
+.activitiesAddress {
     /*font-size: larger;*/
     /*margin-bottom: 12px;*/
 }
 
-.ActivitiesRating {
+.activitiesRating {
     margin-top: 12px;
 
 }
 
-.Rating {
+.rating {
     color: crimson;
     font-weight: bold;
 }
 
-.Weekday_text {
+.weekday_text {
     font-size: 0.9em;
 }
 
-.Weekday {
+.weekday {
     display: inline-block;
     width: 100px;
 }
 
-.Timeday {
+.timeday {
 }
 
 .thumbnailImg {
@@ -86,8 +86,4 @@
 
 .openingHoursIcon {
     margin-left: 4px;
-}
-
-.icon {
-    color: crimson;
 }

@@ -3,7 +3,7 @@ import {formatDuration, formatPrice, formatTime} from '@/app/utils/time'
 import {formatAirport} from '@/app/utils/airport'
 
 
-export default function FlightView({responseContent, max = 5}) {
+export default function FlightView({responseContent, max = 10}) {
   if (!responseContent) return null
 
   /*
