@@ -4,7 +4,9 @@ gcloud run deploy chatbot-server --image europe-west10-docker.pkg.dev/weighty-ar
 
 
 Travel API free
-amadeus https://www.postman.com/amadeus4dev/amadeus-for-developers-s-public-workspace/request/x76qr0m/access-granted-client-credentials
+amadeus
+https://github.com/amadeus4dev/amadeus-python
+https://www.postman.com/amadeus4dev/amadeus-for-developers-s-public-workspace/request/x76qr0m/access-granted-client-credentials
 google maps https://developers.google.com/maps/documentation/embed/embedding-map#choosing_map_modes
 tripadvisor https://www.tripadvisor.com/developers?screen=credentials
 

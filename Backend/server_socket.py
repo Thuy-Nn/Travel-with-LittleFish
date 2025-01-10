@@ -1,9 +1,11 @@
 import asyncio
+import json
 
 import yaml
 from websockets.asyncio.server import serve
 
 from MODEL_ZOO import MODEL_ZOO
+from server_handling import process_response
 
 config = yaml.safe_load(open("config.yaml"))
 
@@ -39,7 +41,9 @@ async def handler(websocket):
             return
 
         response = model.invoke(user_message)
-        await websocket.send(response)
+        output = process_response(response)
+
+        await websocket.send(json.dumps(output))
 
 
 async def main():

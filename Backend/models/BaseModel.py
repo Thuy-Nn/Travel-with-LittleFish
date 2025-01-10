@@ -20,7 +20,7 @@ class BaseModel:
 
         # return self._invoke(prompt)
 
-        fn = """{"type": "content_type", content: {"name": "function_name", "arguments": {"arg_1": "value_1", "arg_2": value_2, ...}}}"""
+        fn = """{"type": "content_type", "content": {"name": "function_name", "arguments": {"arg_1": "value_1", "arg_2": value_2, ...}}}"""
 
         sys_prompt = f"""You are a helpful assistant with access to the following functions:
 
@@ -33,9 +33,11 @@ class BaseModel:
 
         Edge cases you must handle:
         - Classify the required response into one of the following types: text, flights, hotels, activities. 
+        - For the "text" response, "content" should include the text only.
         - If there are no functions that match the user request, you will respond politely that you cannot help.
         - If there is a required argument missing, ask the user to provide the missing argument.
         - If originLocationCode, destinationLocationCode, cityCode are name of city or airport, please convert to IATA code.
+        - For the function "get_places", the category can only be "hotels", "restaurants", or "attractions".
 
         Here is the first prompt: {prompt}
 

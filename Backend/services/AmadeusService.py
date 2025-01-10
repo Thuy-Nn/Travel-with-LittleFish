@@ -4,12 +4,15 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import json
 
+from services.GooglePlaceService import GooglePlaceService
+
 config = yaml.safe_load(open("config.yaml"))
 
 
-class Amadeus:
+class AmadeusService:
     def __init__(self):
         self.api_root = 'https://api.amadeus.com/'
+        self.google_service = GooglePlaceService()
 
     def _get_token(self):
         token_file = 'token.json'
@@ -39,9 +42,9 @@ class Amadeus:
         # 'access_token': 'FFBjfAhXBZmUoNK51wqqsayvwyke',
         # 'expires_in': 1799, 'state': 'approved', 'scope': ''}
 
-    def get_flight(self, originLocationCode, destinationLocationCode, departureDate, adults=1,
-                   returnDate=None, travelClass='ECONOMY', nonStop=False, currencyCode='EUR', max=200
-                   ):
+    def get_flights(self, originLocationCode, destinationLocationCode, departureDate, adults=1,
+                    returnDate=None, travelClass='ECONOMY', nonStop=False, currencyCode='EUR', max=20
+                    ):
         token = self._get_token()
 
         path = "/v2/shopping/flight-offers"
@@ -52,9 +55,9 @@ class Amadeus:
             "departureDate": departureDate,
             "adults": adults,
             "returnDate": returnDate,
-            "travelClass": travelClass,
-            "nonStop": nonStop,
-            "currencyCode": currencyCode,
+            # "travelClass": travelClass,
+            # "nonStop": nonStop,
+            # "currencyCode": currencyCode,
             "max": max
         }
         response = requests.get(self.api_root + path, headers=headers, params=params)
@@ -101,7 +104,7 @@ class Amadeus:
         response = requests.get(self.api_root + path, headers=headers, params=params)
         return response.json()
 
-    def get_hotels(self, cityCode, checkInDate, checkOutDate, adults=1, radius=5, ratings=None):
+    def get_hotels(self, cityCode, checkInDate, checkOutDate, adults=1, radius=3, ratings=None):
         hotel_listing = self._get_hotel_listing(cityCode, radius, ratings)
 
         if 'data' not in hotel_listing:
@@ -110,7 +113,7 @@ class Amadeus:
                 'details': hotel_listing
             }
 
-        hotel_listing['data'] = hotel_listing['data'][:50]
+        hotel_listing['data'] = hotel_listing['data'][:10]  # max 50
         print('Hotels found:', hotel_listing['meta']['count'])
 
         hotel_ids = []
@@ -159,5 +162,8 @@ class Amadeus:
                 # bo sung data, neu viet theo format ben tren, data gan moi va data gan cu se mat
                 selected_hotels[hid]['numberOfRatings'] = hotel_ratings_map[hid]['numberOfRatings']
                 selected_hotels[hid]['overallRating'] = hotel_ratings_map[hid]['overallRating']
+                selected_hotels[hid]['image'] = self.google_service.get_hotel_photos(
+                    selected_hotels[hid]['geoCode']['latitude'], selected_hotels[hid]['geoCode']['longitude'],
+                    selected_hotels[hid]['name'])
 
         return selected_hotels

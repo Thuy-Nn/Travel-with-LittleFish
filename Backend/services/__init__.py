@@ -1,3 +1,3 @@
-from services.Amadeus import Amadeus
-from services.Tripadvisor import Tripadvisor
 from services.FUNCTIONS import FUNCTIONS
+from services.AmadeusService import AmadeusService
+from services.TripadvisorService import TripadvisorService
