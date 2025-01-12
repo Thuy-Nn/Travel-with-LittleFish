@@ -1,25 +1,13 @@
 .travelPage {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-.leftSidebar {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: var(--sidebar-width);
-}
-
-.mainContent {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: var(--sidebar-width);
-    right: 0;
+    position: relative;
+    height: 100vh;
+    max-width: 800px;
+    margin: auto;
+    box-sizing: border-box;
+    /*background: var(--background--color);*/
+    /*border-left: 1px solid var(--border-color);*/
+    /*border-right: 1px solid var(--border-color);*/
+    /*box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);*/
 }
 
 .headerContainer {
@@ -28,27 +16,54 @@
     height: var(--header-height);
     left: 0;
     right: 0;
+    /*background-color: var(--bg-element-color);*/
+    border-bottom: 1px solid rgba(100, 100, 100, 0.2);
+    /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);*/
 }
 
-.historyContainer {
-    position: absolute;
-    bottom: 0;
-    top: var(--header-height);
-    left: 0;
-    right: 0;
-}
-
-.toolbarPanel {
+.toolbarContainer {
     position: absolute;
     top: 0;
-    height: var(--header-height);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /*width: 50%;*/
+    text-align: center;
+}
+
+.toolbarButton {
+    font-size: 1.8em;
+}
+
+.sidebarContainer,
+.sidebarContainer__collapsed {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: var(--sidebar-width);
+    padding: var(--spacing);
+    box-sizing: border-box;
+    background-color: var(--bg-element-color);
+    border-left: 1px solid rgba(100, 100, 100, 0.2);
+    box-shadow: -4px 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+}
+
+.sidebarContainer__collapsed {
+    transform: translateX(var(--sidebar-width));
+}
+
+.mainContent {
+    position: absolute;
+    top: var(--header-height);
+    bottom: 0;
     left: 0;
     right: 0;
 }
 
 .chatContainer {
     position: absolute;
-    /*top: var(--header-height);*/
     top: 0;
     bottom: var(--input-height);
     left: 0;
@@ -66,13 +81,11 @@
 }
 
 .headerContainer,
-.historyContainer,
-.toolbarPanel,
 .chatContainer,
-.inputContainer {
+.inputContainer,
+.toolbarContainer {
     padding: var(--spacing);
     box-sizing: border-box;
-    border: 1px dashed rgba(100, 100, 100, 0.2);
 }
 
 
@@ -90,25 +103,6 @@
     font-size: 14pt;
     font-weight: 700; /* in dam chu */
     text-transform: uppercase;
-}
-
-/* Toolbar */
-.toolbarIconContainer {
-    position: absolute;
-    top: 18px;
-    right: 12px;
-}
-
-.toolbarIcon {
-    margin-left: 24px;
-    font-size: 18pt;
-}
-
-
-/* History */
-.historyItem {
-    /*tren duoi 6, trai phai 0*/
-    padding: 6px 0;
 }
 
 /* Chat */
@@ -165,7 +159,7 @@ focus: chuot o dau no sang mau luon
 .messageTextbox:active, .messageTextbox:focus {
 }
 
-.sendButton{
+.sendButton {
     position: absolute;
     top: 10px;
     bottom: 16px;
@@ -175,4 +169,10 @@ focus: chuot o dau no sang mau luon
 
 .processingGif {
     height: 48px;
+}
+
+@media screen and (max-width: 768px) {
+    .toolbarContainer {
+        text-align: right;
+    }
 }

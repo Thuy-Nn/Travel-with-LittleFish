@@ -1,8 +1,7 @@
-from models import QwenModel
-from models import OpenAIModel, LlamaModel
+from models import OpenAIModel
 
 MODEL_ZOO = {
-    "Qwen": QwenModel,
     "OpenAI": OpenAIModel,
-    "Llama": LlamaModel
+    # "Qwen": QwenModel,
+    # "Llama": LlamaModel
 }

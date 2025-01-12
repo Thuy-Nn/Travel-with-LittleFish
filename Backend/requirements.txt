@@ -1,6 +1,12 @@
-numpy
-torch
+firebase-admin
+flask
+flask-cors
 openai
-gpt4all
-chromadb
+numpy
+pyyaml
+requests
+websockets
+# chromadb
+# torch
+# gpt4all
 # transformers

@@ -1,0 +1,8 @@
+.gcloudignore
+.git
+.gitignore
+
+# local source
+.idea/
+*.json
+README.md

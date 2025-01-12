@@ -1,20 +1,29 @@
+import yaml
 from flask import Flask, request, jsonify
-from MODEL_ZOO import MODEL_ZOO
+from flask_cors import CORS
 
+from database import Database
+
+from MODEL_ZOO import MODEL_ZOO
+from server_handling import process_response
+
+config = yaml.safe_load(open("config.yaml"))
 
 app = Flask(__name__)
+CORS(app)
 
 # Load the model and tokenizer
-MODEL_TYPE = "Llama"
-MODEL_NAME = "Meta-Llama-3-8B-Instruct.Q4_0.gguf"
-# MODEL_TYPE = "OpenAI"
-# MODEL_NAME = "gpt-4o-mini-2024-07-18"
+MODEL_TYPE = "OpenAI"
+MODEL_NAME = "gpt-4o-mini-2024-07-18"
+# MODEL_TYPE = "Llama"
+# MODEL_NAME = "Meta-Llama-3-8B-Instruct.Q4_0.gguf"
 # MODEL_TYPE = "Qwen"
 # MODEL_NAME = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
-# Load the model and tokenizer
 
 model = None
 
+# chroma_client = chromadb.PersistentClient(path="database/chromadb")
+# collection = chroma_client.get_or_create_collection(name="sent_emails_anonymized")
 
 # API endpoint for chatbot
 @app.route("/chat", methods=["POST"])
@@ -34,8 +43,9 @@ def chat():
         return jsonify({"error": "Internal server error"}), 500
 
     response = model.invoke(user_message)
+    output = process_response(response)
 
-    return jsonify({"response": response})
+    return jsonify(output)
 
 @app.route("/", methods=["GET"])
 def home():
@@ -43,4 +53,4 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(config['ENV']['host'], config['ENV']['port'])

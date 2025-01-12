@@ -67,7 +67,7 @@ class AmadeusService:
     def _get_hotel_listing(self, cityCode, radius=1, ratings=None):
         token = self._get_token()
 
-        path = "/v1/reference-data/locations/hotels/by-city"
+        path = "/v1/reference-database/locations/hotels/by-city"
         headers = {"Authorization": f"Bearer {token}"}
         params = {
             "cityCode": cityCode,
@@ -107,18 +107,18 @@ class AmadeusService:
     def get_hotels(self, cityCode, checkInDate, checkOutDate, adults=1, radius=3, ratings=None):
         hotel_listing = self._get_hotel_listing(cityCode, radius, ratings)
 
-        if 'data' not in hotel_listing:
+        if 'database' not in hotel_listing:
             return {
                 'error_at': 'hotel_listing',
                 'details': hotel_listing
             }
 
-        hotel_listing['data'] = hotel_listing['data'][:10]  # max 50
+        hotel_listing['database'] = hotel_listing['database'][:10]  # max 50
         print('Hotels found:', hotel_listing['meta']['count'])
 
         hotel_ids = []
         hotel_listing_map = {}
-        for h in hotel_listing['data']:
+        for h in hotel_listing['database']:
             hotel_ids.append(h['hotelId'])
             hotel_listing_map[h['hotelId']] = h
 
@@ -126,7 +126,7 @@ class AmadeusService:
 
         hotel_price = self._get_hotel_price(hotel_ids, checkInDate, checkOutDate, adults)
 
-        if 'data' not in hotel_price:
+        if 'database' not in hotel_price:
             return {
                 'error_at': 'hotel_price',
                 'details': hotel_price
@@ -134,7 +134,7 @@ class AmadeusService:
 
         hotel_price_ids = []
         hotel_price_map = {}
-        for h in hotel_price['data']:
+        for h in hotel_price['database']:
             hotel_price_ids.append(h['hotel']['hotelId'])
             hotel_price_map[h['hotel']['hotelId']] = h
 
@@ -144,8 +144,8 @@ class AmadeusService:
         for i in range(0, len(hotel_price_ids), 3):
             hids = hotel_price_ids[i: i + 3]
             ratings = self._get_hotel_ratings(hids)
-            if 'data' in ratings:
-                for h in ratings['data']:
+            if 'database' in ratings:
+                for h in ratings['database']:
                     hotel_ratings_map[h['hotelId']] = h
 
         selected_hotels = {}
@@ -159,7 +159,7 @@ class AmadeusService:
             }
 
             if hid in hotel_ratings_map:
-                # bo sung data, neu viet theo format ben tren, data gan moi va data gan cu se mat
+                # bo sung database, neu viet theo format ben tren, database gan moi va database gan cu se mat
                 selected_hotels[hid]['numberOfRatings'] = hotel_ratings_map[hid]['numberOfRatings']
                 selected_hotels[hid]['overallRating'] = hotel_ratings_map[hid]['overallRating']
                 selected_hotels[hid]['image'] = self.google_service.get_hotel_photos(

@@ -4,7 +4,7 @@ from models.BaseModel import BaseModel
 
 
 class OpenAIModel(BaseModel):
-    def __init__(self, name):
+    def __init__(self, name='gpt-4o-mini-2024-07-18'):
         super().__init__(name)
         self.config = yaml.safe_load(open('config.yaml'))
 

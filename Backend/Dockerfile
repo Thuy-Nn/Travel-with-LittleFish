@@ -8,10 +8,9 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies
-RUN pip install --no-cache-dir flask transformers torch accelerate
+RUN pip install -r requirements.txt
 
-# Expose the port Flask runs on
 EXPOSE 8080
 
 # Run the application
-CMD ["python", "server_socket.py"]
+CMD ["python", "server_rest.py"]
