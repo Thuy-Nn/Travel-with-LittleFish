@@ -5,7 +5,7 @@
   --dim-foreground-color: #888888;
   --border-color: #cccccc;
   --bg-element-color: #f0f0f0;
-  --sidebar-width: 180px;
+  --sidebar-width: 400px;
   --header-height: 60px;
   --input-height: 60px;
   --spacing: 12px;
@@ -37,6 +37,7 @@ button {
   font-family: inherit;
   cursor: pointer;
   transition: color 0.3s;
+  padding: 0;
 }
 
 button:hover {
