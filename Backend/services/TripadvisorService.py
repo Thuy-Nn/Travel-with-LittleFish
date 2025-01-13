@@ -12,9 +12,10 @@ class TripadvisorService:
 
         path = 'v1/location/search'
         params = {
+            'key': self.key,
             'searchQuery': searchQuery,
             'category': category,
-            'key': self.key
+            'address': searchQuery
         }
 
         response = requests.get(self.api_root + path, params=params)
@@ -42,7 +43,7 @@ class TripadvisorService:
         location_listing = self.get_location(searchQuery, category)
         # print(location_listing)
 
-        if 'database' not in location_listing:
+        if 'data' not in location_listing:
             return{
                 'error_at': 'location not found',
                 'details': location_listing
@@ -50,7 +51,7 @@ class TripadvisorService:
 
         location_ids = []
         location_listing_map = {}
-        for lid in location_listing['database']:
+        for lid in location_listing['data']:
             location_ids.append(lid['location_id'])
             location_listing_map[lid['location_id']] = lid
 
@@ -90,8 +91,8 @@ class TripadvisorService:
                     selected_locations[lid]['weekday_text'] = location_details_map[lid]['hours']['weekday_text']
 
             if lid in location_photos_map:
-                if 'database' in location_photos_map[lid]:
-                    selected_locations[lid]['images'] = location_photos_map[lid]['database'][0]['images']['large']['url']
+                if 'data' in location_photos_map[lid]:
+                    selected_locations[lid]['images'] = location_photos_map[lid]['data'][0]['images']['large']['url']
 
         return selected_locations
 

@@ -1,4 +1,5 @@
 from services import FUNCTIONS
+import ast
 
 
 class BaseModel:
@@ -20,54 +21,38 @@ class BaseModel:
 
         # return self._invoke(prompt)
 
-        fn = """{"type": "content_type", "content": {"name": "function_name", "arguments": {"arg_1": "value_1", "arg_2": value_2, ...}}}"""
-
-        if prompt.startswith('Analyze'):
+        if prompt.startswith('Analyze') or prompt.startswith('analyze'):
             functions = FUNCTIONS['UTILS']
-            guide_text = """
-            - For the function "get_criteria", the "sortBy" can only be "price", "duration", or "distance". And the "sortOrder" can only be "ascending", or "descending".
-            """
         else:
             functions = FUNCTIONS['API']
-            guide_text = """
-            - If originLocationCode, destinationLocationCode, cityCode are name of city or airport, please convert to IATA code.
-            - For the function "get_places", the category can only be "hotels", "restaurants", or "attractions".
-            """
 
-        sys_prompt = f"""You are a helpful assistant with access to the following functions:
-
-        {functions}
-
-        To use these functions respond with:
-             {fn} 
-             {fn} 
-            ...
-
+        sys_prompt = f"""{prompt}
         Edge cases you must handle:
-        - Classify the required response into one of the following types: text, flights, hotels, activities.
-        - For the "text" response, "content" should include the text only.
         - If there are no functions that match the user request, you will respond politely that you cannot help.
-        - If there is a required argument missing, ask the user to provide the missing argument.         
-        {guide_text}
-
-        Here is the first prompt: {prompt}
-
-        Please respond with one of the available functions including the arguments. Only return the function with the following 
-        format: {fn}. No other text should be included.
+        - If a required argument is missing, prompt the user to provide it. This step is crucial.
         """
 
-        return self._invoke(sys_prompt)
+        return self._invoke(sys_prompt, functions)
 
-    def analyze(self, response, type, sortBy, sortOrder=None):
-        # print(f'Analyze by {sortBy} {sortOrder}')
-
+    def analyze(self, response, content_type, sort_by, sort_order=None, limit=10):
         if self.model is None:
             self._load_model()
 
-        prompt = f"""Given the JSON below which is a list of {type}, each contains an id. 
-        Sort the items in the JSON by {sortBy} {sortOrder}. Only return the list of ids. No other text should be included.
+        prompt = f"""Given the JSON below which is a list of {content_type}, each contains an id. 
+        Sort the items in the JSON by {sort_by} {sort_order}. Only return the list of ids. The most important that no other text should be included.
+        If there is a required argument missing, ask the user to provide the missing argument.
         {response}
         """
 
-        return self._invoke(prompt)
+        analyzed_ids = self._invoke(prompt)
 
+        # trim unnecessary text
+        pos1 = analyzed_ids.find('[')
+        pos2 = analyzed_ids.rfind(']')
+        if -1 < pos1 < pos2:
+            analyzed_ids = analyzed_ids[pos1:pos2 + 1]
+
+        parsed_ids = ast.literal_eval(analyzed_ids)
+
+        return parsed_ids[:limit]
+        # return parsed_ids

@@ -1,10 +1,11 @@
+import json
+
 from database.Database import Database
 from models import OpenAIModel
 from services import AmadeusService, TripadvisorService
-import json
 
 
-def filter_flights(response_data):
+def filter_flights(response_data, limit=10):
     returned_data = []
 
     for d in response_data:
@@ -14,32 +15,47 @@ def filter_flights(response_data):
             'price': d['price']['grandTotal'],
         })
 
-    return returned_data[:10]
+    return returned_data[:limit]
 
 
-def filter_hotels(response_data):
-    return response_data
+def filter_hotels(response_data, limit=10):
+    returned_data = []
 
-def filter_activities(response_data):
-    return response_data
+    for d in response_data:
+        returned_data.append({
+            'id': d['id'],
+            'distance': d['distance'],
+            'rating': d['overallRating'],
+        })
+    return returned_data[:limit]
 
 
-def process_response(text_response):
-    # print(text_response)
-    json_response = json.loads(text_response)
-    # print(json_response)
+def filter_activities(response_data, limit=10):
+    returned_data = []
 
-    if json_response['type'] == 'text':
+    for d in response_data:
+        returned_data.append({
+            'id': d['id'],
+            'rating': d['rating'],
+        })
+    return returned_data[:limit]
+
+
+def process_response(llm_response):
+    # print(llm_response)
+
+    if 'function_name' not in llm_response:
         return {
             'type': 'text',
-            'content': json_response['content']
+            'content': llm_response,
         }
 
-    function_args = json_response['content']['arguments']
+    if 'function_arguments' in llm_response:
+        function_args = json.loads(llm_response['function_arguments'])
 
-    if json_response['content']['name'] == 'analyze_by_criteria':
+    if llm_response['function_name'] == 'analyze_by_criteria':
         db = Database()
-        last_data = db.load_latest('responses')
+        last_data = db.load_latest('responses', function_args['content_type'])
         if len(last_data) == 0:
             return {
                 'type': 'text',
@@ -48,13 +64,15 @@ def process_response(text_response):
         else:
             last_data = last_data[0]
 
+        print('Analyze the last data:', last_data['created_at'])
+
         filtered_data = None
         if last_data['type'] == 'flights':
-            filtered_data = filter_flights(last_data['content']['data'])
+            filtered_data = filter_flights(last_data['content']['data'], limit=50)
         elif last_data['type'] == 'hotels':
-            filtered_data = filter_hotels(last_data['content']['data'])
-        elif last_data['type'] == 'activities':
-            filtered_data = filter_activities(last_data['content']['data'])
+            filtered_data = filter_hotels(last_data['content'], limit=50)
+        elif last_data['type'] in ['attractions', 'restaurants']:
+            filtered_data = filter_activities(last_data['content'], limit=50)
 
         if filtered_data is None:
             return {
@@ -63,13 +81,38 @@ def process_response(text_response):
             }
 
         model = OpenAIModel()
-        analyze_response = model.analyze(filtered_data, last_data['type'], **function_args)
+        analyzed_ids = model.analyze(filtered_data, **function_args)
 
-        # remap data from analyzed response
+        if last_data['type'] == 'flights':
+            analyzed_response = {
+                **last_data['content'],
+                'data': []
+            }
+            id_map = {}
+            for d in last_data['content']['data']:
+                id_map[d['id']] = d
+            for id in analyzed_ids:
+                analyzed_response['data'].append(id_map[id])
+
+        elif last_data['type'] == 'hotels':
+            analyzed_response = []
+            id_map = {}
+            for d in last_data['content']:
+                id_map[d['id']] = d
+            for id in analyzed_ids:
+                analyzed_response.append(id_map[id])
+
+        elif last_data['type'] in ['attractions', 'restaurants']:
+            analyzed_response = []
+            id_map = {}
+            for d in last_data['content']:
+                id_map[d['id']] = d
+            for id in analyzed_ids:
+                analyzed_response.append(id_map[id])
 
         output_response = {
             'type': last_data['type'],
-            'content': analyze_response
+            'content': analyzed_response
         }
 
     else:
@@ -78,16 +121,34 @@ def process_response(text_response):
 
         # function_lookup = {f['name']: getattr(svc, f['name']) for f in FUNCTIONS}
         function_lookup = {
-            'get_flights': svc.get_flights,
-            'get_hotels': svc.get_hotels,
-            'get_places': svc2.get_places
+            'get_flights': {
+                'type': 'flights',
+                'function': svc.get_flights
+            },
+            'get_hotels': {
+                'type': 'hotels',
+                'function': svc.get_hotels
+            },
+            'get_places': {
+                'type': None,  # should be replaced by the content category after receiving the response
+                'function': svc2.get_places
+            }
         }
 
-        function_to_call = function_lookup[json_response['content']['name']]
-        function_output = function_to_call(**function_args)
+        function_to_call = function_lookup[llm_response['function_name']]
+        function_output = function_to_call['function'](**function_args)
+
+        if llm_response['function_name'] == 'get_places':
+            function_to_call['type'] = function_args['category']
+
+        if llm_response['function_name'] in ['get_hotels', 'get_places']:
+            function_output = [{
+                'id': k,
+                **v
+            } for k, v in function_output.items()]
 
         output_response = {
-            'type': json_response['type'],
+            'type': function_to_call['type'],
             'content': function_output
         }
 
@@ -99,7 +160,12 @@ def process_response(text_response):
 
 if __name__ == '__main__':
     model = OpenAIModel()
+    # # response = model.invoke('Hi')
     # response = model.invoke('Show me top 5 cheapest flights from Berlin to Paris on 20.01.2025 for 1 adult')
-    response = model.invoke('Analyze and give me 5 fastest flights')
+    response = model.invoke('Show me top hotels in Hanoi')
+    # response = model.invoke('Analyze 5 worst rated restaurants in berlin')
+    # response = model.invoke('Give me your money')
     output = process_response(response)
-    json.dump(output, open('analyze_flights.json', 'w'))
+    json.dump(output, open('output/analyze.json', 'w'))
+
+

@@ -13,13 +13,29 @@ class OpenAIModel(BaseModel):
         self.model = OpenAI(api_key=self.config['KEYS']['openai'])
 
     def _invoke(self, prompt, functions=None):
+        tools = None
+        if functions is not None:
+            tools = [{
+                "type": "function",
+                "function": f
+            } for f in functions]
+
         response = self.model.chat.completions.create(
             model=self.name,
             messages=[
-                {'role': 'system', 'content': 'You are a helpful assistant.'},
+                {'role': 'system', 'content': 'You are a helpful assistant that '},
                 {'role': 'user', 'content': prompt}
             ],
-            # tools=tools
+            tools=tools
         )
 
-        return response.choices[0].message.content
+        print(response.choices[0].message)
+
+        if response.choices[0].message.tool_calls is None:
+            return response.choices[0].message.content
+        else:
+            tool_calls = response.choices[0].message.tool_calls[0]
+            return {
+                'function_name': tool_calls.function.name,
+                'function_arguments': tool_calls.function.arguments,
+            }

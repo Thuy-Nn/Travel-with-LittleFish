@@ -6,8 +6,11 @@ from firebase_admin import credentials, firestore
 
 class Database:
     def __init__(self):
-        cred = credentials.Certificate('firebase-key.json')
-        self.app = firebase_admin.initialize_app(cred)
+        try:
+            self.app = firebase_admin.get_app()
+        except ValueError:
+            cred = credentials.Certificate('firebase-key.json')
+            self.app = firebase_admin.initialize_app(cred)
         self.client = firestore.client()
 
     def save(self, collection_name, data, id=None):
@@ -16,6 +19,7 @@ class Database:
         else:
             doc = self.client.collection(collection_name).document(id)
 
+        data['id'] = doc.id
         data['created_at'] = datetime.now().isoformat()
         doc.set(data)
         return doc
@@ -23,8 +27,8 @@ class Database:
     def load(self, collection_name, id):
         return self.client.collection(collection_name).document(id).get().to_dict()
 
-    def load_latest(self, collection_name):
-        docs = self.client.collection(collection_name).order_by('created_at', direction=firestore.Query.DESCENDING).limit(1).get()
+    def load_latest(self, collection_name, content_type):
+        docs = self.client.collection(collection_name).where('type', '==', content_type).order_by('created_at', direction=firestore.Query.DESCENDING).limit(1).get()
         return [doc.to_dict() for doc in docs]
 
     def update(self, collection_name, id, data):

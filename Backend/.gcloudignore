@@ -4,5 +4,6 @@
 
 # local source
 .idea/
-*.json
+output
+token.json
 README.md
