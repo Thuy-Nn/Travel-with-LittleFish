@@ -3,13 +3,16 @@ import yaml
 
 config = yaml.safe_load(open("config.yaml"))
 
+default_header = {
+    "Referer": "https://chatbot-server-892532006409.europe-west10.run.app/"
+}
+
 class TripadvisorService:
     def __init__(self):
         self.api_root = 'https://api.content.tripadvisor.com/api/'
         self.key = config['KEYS']['tripadvisor']
 
     def get_location(self, searchQuery, category):
-
         path = 'v1/location/search'
         params = {
             'key': self.key,
@@ -18,17 +21,16 @@ class TripadvisorService:
             'address': searchQuery
         }
 
-        response = requests.get(self.api_root + path, params=params)
+        response = requests.get(self.api_root + path, params=params, headers=default_header)
         return response.json()
 
     def get_location_details(self, locationId):
-
         path = f'v1/location/{locationId}/details'
         params = {
             'key': self.key
         }
 
-        response = requests.get(self.api_root + path, params=params)
+        response = requests.get(self.api_root + path, params=params, headers=default_header)
         return response.json()
 
     def get_location_photos(self, locationId):
@@ -36,7 +38,7 @@ class TripadvisorService:
         params = {
             'key': self.key
         }
-        response = requests.get(self.api_root + path, params=params)
+        response = requests.get(self.api_root + path, params=params, headers=default_header)
         return response.json()
 
     def get_places(self, searchQuery, category):

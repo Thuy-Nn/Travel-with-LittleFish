@@ -22,11 +22,17 @@ def filter_hotels(response_data, limit=10):
     returned_data = []
 
     for d in response_data:
-        returned_data.append({
+        item = {
             'id': d['id'],
             'distance': d['distance'],
-            'rating': d['overallRating'],
-        })
+            'price': d['offer']['price']['total'],
+        }
+
+        if 'overallRating' in d:
+            item['rating'] = d['overallRating']
+
+        returned_data.append(item) # ham gan, bo sung item them vao
+
     return returned_data[:limit]
 
 
@@ -52,6 +58,7 @@ def process_response(llm_response):
 
     if 'function_arguments' in llm_response:
         function_args = json.loads(llm_response['function_arguments'])
+        # print(function_args)
 
     if llm_response['function_name'] == 'analyze_by_criteria':
         db = Database()
@@ -135,8 +142,20 @@ def process_response(llm_response):
             }
         }
 
+        # print("llm_response:", llm_response['function_name'])
         function_to_call = function_lookup[llm_response['function_name']]
+        # print("function_to_call", function_to_call)
         function_output = function_to_call['function'](**function_args)
+        # print("function_to_call['function']:", function_to_call['function'])
+
+        print(function_to_call)
+        print(function_output)
+
+        if 'error_at' in function_output:
+            return {
+                'type': 'error',
+                'content': json.dumps(function_output)
+            }
 
         if llm_response['function_name'] == 'get_places':
             function_to_call['type'] = function_args['category']
@@ -144,8 +163,9 @@ def process_response(llm_response):
         if llm_response['function_name'] in ['get_hotels', 'get_places']:
             function_output = [{
                 'id': k,
-                **v
+                **v # copy v
             } for k, v in function_output.items()]
+
 
         output_response = {
             'type': function_to_call['type'],
@@ -162,10 +182,12 @@ if __name__ == '__main__':
     model = OpenAIModel()
     # # response = model.invoke('Hi')
     # response = model.invoke('Show me top 5 cheapest flights from Berlin to Paris on 20.01.2025 for 1 adult')
-    response = model.invoke('Show me top hotels in Hanoi')
-    # response = model.invoke('Analyze 5 worst rated restaurants in berlin')
-    # response = model.invoke('Give me your money')
+    # response = model.invoke('Show me top hotels in paris from 25.01.2025 to 27.01.2025')
+    # response = model.invoke('Analyze top 1 cheapest hotels')
+    # response = model.invoke('Hotels in Hanoi from 20.02 to 24.02.2025 for 1 adult')
+    response = model.invoke('show me attractions in Seoul')
     output = process_response(response)
-    json.dump(output, open('output/analyze.json', 'w'))
+    json.dump(output, open('output/activities.json', 'w'))
+
 
 

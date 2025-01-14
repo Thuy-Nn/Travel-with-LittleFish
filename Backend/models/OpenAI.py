@@ -29,7 +29,7 @@ class OpenAIModel(BaseModel):
             tools=tools
         )
 
-        print(response.choices[0].message)
+        # print(response.choices[0].message)
 
         if response.choices[0].message.tool_calls is None:
             return response.choices[0].message.content
