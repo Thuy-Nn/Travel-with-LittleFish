@@ -1,3 +1,19 @@
+.outer {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+.iconsContainer {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
 .icon {
     color: crimson;
+}
+
+.ratingNumber {
+    display: inline-block;
+    vertical-align: baseline;
+    margin-left: 6px;
 }

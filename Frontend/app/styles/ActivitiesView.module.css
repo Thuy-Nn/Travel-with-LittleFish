@@ -1,12 +1,13 @@
 .activitiesItemOuter {
     position: relative;
-    display: inline-block;
-    width: 100%;
+    display: block;
+    min-width: 400px;
     padding: 12px;
     margin-bottom: 12px;
     border-radius: 12px;
     background-color: var(--bg-element-color);
     overflow: hidden;
+    line-height: 1.25em;
 }
 
 .activitiesItemLeftView {
@@ -49,6 +50,7 @@
 
 .weekday_text {
     font-size: 0.9em;
+    line-height: 1.5em;
 }
 
 .weekday {
@@ -86,4 +88,10 @@
 
 .openingHoursIcon {
     margin-left: 4px;
+}
+
+@media screen and (max-width: 768px) {
+    .activitiesItemOuter {
+        min-width: unset;
+    }
 }

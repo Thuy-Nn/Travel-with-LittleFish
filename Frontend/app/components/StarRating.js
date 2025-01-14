@@ -14,7 +14,10 @@ function StarRating({rating}) {
       stars.push(<span key={i} className={_.icon + ' icon-star-empty'}/>);
     }
   }
-  return <span>{stars}</span>;
+  return <div className={_.outer}>
+    <div className={_.iconsContainer}>{stars}</div>
+    <span className={_.ratingNumber}>{rating}</span>
+  </div>;
 }
 
 export default StarRating

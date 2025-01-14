@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?angl69');
-  src:  url('fonts/icomoon.eot?angl69#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?angl69') format('truetype'),
-    url('fonts/icomoon.woff?angl69') format('woff'),
-    url('fonts/icomoon.svg?angl69#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?c43s7o');
+  src:  url('fonts/icomoon.eot?c43s7o#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?c43s7o') format('truetype'),
+    url('fonts/icomoon.woff?c43s7o') format('woff'),
+    url('fonts/icomoon.svg?c43s7o#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-heart-o:before {
+  content: "\e901";
+}
+.icon-heart:before {
+  content: "\e912";
+}
 .icon-star-half:before {
   content: "\e90f";
 }
@@ -36,12 +42,6 @@
 }
 .icon-airplane:before {
   content: "\e908";
-}
-.icon-arrow-up-circle:before {
-  content: "\e900";
-}
-.icon-chevron-down:before {
-  content: "\e90b";
 }
 .icon-arrow-right:before {
   content: "\e909";
@@ -58,8 +58,8 @@
 .icon-clock:before {
   content: "\e90d";
 }
-.icon-heart:before {
-  content: "\e901";
+.icon-image:before {
+  content: "\e913";
 }
 .icon-loader:before {
   content: "\e90a";

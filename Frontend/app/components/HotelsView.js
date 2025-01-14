@@ -1,41 +1,56 @@
 import _ from '../styles/HotelsView.module.css'
 import StarRating from '@/app/components/StarRating'
+import {formatPrice} from '@/app/utils/time'
 
-export default function HotelsView({responseContent, max = 10}) {
+export default function HotelsView({responseType, responseContent, max = 10, favoriteIds, toggleFavorite}) {
   if (!responseContent) return null
 
-  const dataArr = Object.values(responseContent).filter((item) => typeof item === "object")
-  const data = dataArr.slice(0, max)
-  // console.log(data)
+  const displayedData = responseContent.slice(0, max)
+  // console.log(displayedData)
+
+  if (displayedData.length === 0) {
+    return <span>No results found</span>
+  }
 
   return <div>
-    {data.map((item, index) => <HotelItem key={'hotels-' + index}
-                                          name={item.name}
-                                          geoCode={item.geoCode}
-                                          distance={item.distance}
-                                          offer={item.offer}
-                                          overallRating={item.overallRating}
-                                          numberOfRatings={item.numberOfRatings}
-                                          image={item.image}
-    />)}
+    {displayedData.map((item, index) =>
+      <HotelItem key={'hotels-' + index}
+                 item={item}
+                 itemType={responseType}
+                 isFavorite={favoriteIds.includes(responseType + '__' + item['id'])}
+                 toggleFavorite={toggleFavorite}
+      />)}
   </div>
 }
 
-function HotelItem({name, geoCode, distance, offer, overallRating, numberOfRatings, image}) {
-  return <div className={_.hotelsItemOuter}>
+export function HotelItem({item, itemType, isFavorite, toggleFavorite}) {
+  const {id, name, distance, offer, overallRating, numberOfRatings, image} = item
+
+  const _toggleFavorite = () => {
+    if (!toggleFavorite) return
+    toggleFavorite(itemType, id, item)
+  }
+
+  return <div className={_.hotelsItemOuter + ' item-outer'}>
     <div className={_.hotelsItemLeftView}>
       <div className={_.hotelName}>{name}</div>
       {distance && <div className={_.hotelDistance}>{distance.value} km from downtown</div>}
       <div className={_.hotelDescription}>{offer.room.description.text}</div>
-      <div className={_.hotelRating}>
-        <StarRating rating={overallRating / 20}/>
-        <span className={_.overallRating}>{(overallRating / 20).toFixed(1)}</span>
-        <span className={_.numberOfRatings}> {numberOfRatings} Reviews</span>
-      </div>
-      <div className={_.hotelPrice}>{`${offer.price.total} ${offer.price.currency}`}</div>
+
+      {overallRating && <div className={_.hotelRating}>
+        <StarRating rating={(overallRating / 20).toFixed(1)}/>
+        <span className={_.numberOfRatings}>({numberOfRatings.toLocaleString()} Reviews)</span>
+      </div>}
+
+      <div className={_.hotelPrice}>{formatPrice(offer.price.total, offer.price.currency)}</div>
     </div>
     <div className={_.hotelsItemRightView}>
+      <div className={_.thumbnailPlaceholder}>
+        <span className={_.thumbnailPlaceholderIcon + ' icon-image'}/>
+      </div>
       <div className={_.thumbnailImg} style={{backgroundImage: `url("${image}")`}}/>
     </div>
+    <button className={isFavorite ? 'favorite-icon__marked icon-heart' : 'favorite-icon icon-heart-o'}
+            onClick={_toggleFavorite}/>
   </div>
 }

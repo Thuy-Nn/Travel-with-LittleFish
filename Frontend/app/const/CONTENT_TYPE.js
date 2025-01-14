@@ -1,6 +1,8 @@
 export const CONTENT_TYPE = {
+  error: 'error',
   text: 'text',
   flights: 'flights',
   hotels: 'hotels',
-  activities: 'activities',
+  attractions: 'attractions',
+  restaurants: 'restaurants',
 }

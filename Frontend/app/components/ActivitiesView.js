@@ -3,35 +3,43 @@ import {useState} from 'react'
 import StarRating from '@/app/components/StarRating'
 
 
-export default function ActivitiesView({responseContent, max = 10}) {
+export default function ActivitiesView({responseType, responseContent, max = 10, favoriteIds, toggleFavorite}) {
   // console.log(responseContent)
   if (!responseContent) return null
 
   // Convert object to array
-  const activitiesArray = Object.values(responseContent).filter((item) => typeof item === "object")
-  // console.log(activitiesArray)
+  const displayedData = responseContent.slice(0, max)
+  // console.log(displayedData)
+
+  if (displayedData.length === 0) {
+    return <span>No results found</span>
+  }
 
   return <div>
-    {activitiesArray.map((item, index) =>
+    {displayedData.map((item, index) =>
       <ActivitiesItem key={'activities-' + index} // index them so thu tu
-                      name={item.name}
-                      address={item.address}
-                      rating={item.rating}
-                      weekday_text={item.weekday_text}
-                      image_url={item.images}
+                      item={item}
+                      itemType={responseType}
+                      isFavorite={favoriteIds.includes(responseType + '__' + item['id'])}
+                      toggleFavorite={toggleFavorite}
       />)}
   </div>
 }
 
-function ActivitiesItem({name, address, rating, weekday_text, image_url}) {
+export function ActivitiesItem({item, itemType, isFavorite, toggleFavorite}) {
+  const {id, name, address, rating, weekday_text, images} = item
   const [showOpeningHours, setShowOpeningHours] = useState(false)
 
   const toggleOpeningHours = () => {
     setShowOpeningHours(!showOpeningHours)
   }
 
+  const _toggleFavorite = () => {
+    if (!toggleFavorite) return
+    toggleFavorite(itemType, id, item)
+  }
 
-  return <div className={_.activitiesItemOuter}>
+  return <div className={_.activitiesItemOuter + ' item-outer'}>
     <div className={_.activitiesItemLeftView}>
       <div className={_.activitiesName}>
         <span>{name}</span>
@@ -40,10 +48,9 @@ function ActivitiesItem({name, address, rating, weekday_text, image_url}) {
         <span className='icon__left icon-map-pin'/>
         <span>{address}</span>
       </div>
-      <div className={_.activitiesRating}>
+      {rating && <div className={_.activitiesRating}>
         <StarRating rating={rating}/>
-        <span> {rating}</span>
-      </div>
+      </div>}
       <div className={_.weekday_text}>
         <button className={_.openingHoursButton} onClick={toggleOpeningHours}>
           <span>Opening Hours</span>
@@ -62,7 +69,9 @@ function ActivitiesItem({name, address, rating, weekday_text, image_url}) {
       </div>
     </div>
     <div className={_.activitiesItemRightView}>
-      <div className={_.thumbnailImg} style={{backgroundImage: `url("${image_url}")`}}/>
+      <div className={_.thumbnailImg} style={{backgroundImage: `url("${images}")`}}/>
     </div>
+    <button className={isFavorite ? 'favorite-icon__marked icon-heart' : 'favorite-icon icon-heart-o'}
+            onClick={_toggleFavorite}/>
   </div>
 }

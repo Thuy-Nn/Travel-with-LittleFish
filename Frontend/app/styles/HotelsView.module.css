@@ -1,12 +1,13 @@
 .hotelsItemOuter {
     position: relative;
-    display: inline-block;
-    width: 100%;
+    display: block;
+    min-width: 400px;
     padding: 12px;
     margin-bottom: 12px;
     border-radius: 12px;
     background-color: var(--bg-element-color);
     overflow: hidden;
+    line-height: 1.25em;
 }
 
 .hotelsItemLeftView {
@@ -14,6 +15,7 @@
     width: 60%;
     box-sizing: border-box;
     vertical-align: middle;
+    padding-right: 12px;
 }
 
 .hotelsItemRightView {
@@ -38,6 +40,8 @@
 .hotelDescription {
     font-size: x-small;
     color: green;
+    line-height: 1.2;
+    margin: 4px 0;
 }
 
 .hotelRating {
@@ -49,12 +53,16 @@
 }
 
 .numberOfRatings {
-    font-size: smaller;
+    display: inline-block;
+    vertical-align: baseline;
+    margin-left: 6px;
 }
 
 .hotelPrice {
     font-weight: bold;
     font-size: large;
+    margin-top: 12px;
+    color: var(--accent-color);
 }
 
 .thumbnailImg {
@@ -66,4 +74,28 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+}
+
+.thumbnailPlaceholder {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #e0e0e0;
+}
+
+.thumbnailPlaceholderIcon {
+    font-size: 3em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.2;
+}
+
+@media screen and (max-width: 768px) {
+    .hotelsItemOuter {
+        min-width: unset;
+    }
 }

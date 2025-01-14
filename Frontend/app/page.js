@@ -1,12 +1,16 @@
 'use client'
 
 import _ from './Home.module.css'
-import {useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {CONTENT_TYPE} from '@/app/const/CONTENT_TYPE'
-import FlightView from '@/app/components/FlightsView'
-import ActivitiesView from '@/app/components/ActivitiesView'
-import HotelsView from '@/app/components/HotelsView'
+import FlightView, {FlightItem} from '@/app/components/FlightsView'
+import ActivitiesView, {ActivitiesItem} from '@/app/components/ActivitiesView'
+import HotelsView, {HotelItem} from '@/app/components/HotelsView'
 import {CONFIG} from '@/app/const/CONFIG'
+import {deleteFbDoc, getFbDocs, mainDatabase, setFbDoc} from '@/app/fb'
+// import responseData from '@/app/data/activities.json'
+
+import {findItemInArray} from '@/app/utils/tools'
 
 
 export default function Home() {
@@ -20,8 +24,49 @@ export default function Home() {
   const [processing, setProcessing] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
 
+  const [favoriteItems, setFavoriteItems] = useState([])
+
+  const chatViewRef = useRef(null)
+
+  useEffect(() => {
+    loadFavorites()
+      .then(setFavoriteItems)
+      .catch(console.log)
+
+    // setChatMessages(currentMessages => [...currentMessages, {
+    //   'role': 'server',
+    //   'data': responseData
+    // }])
+  }, [])
+
+  useEffect(() => {
+    scrollToTop()
+  }, [chatMessages.length])
+
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar)
+  }
+
+  const toggleFavorite = async (type, id, item) => {
+    const favId = type + '__' + id
+    const foundItem = findItemInArray(favoriteItems, 'favId', favId)
+    if (foundItem.item) {
+      await removeFavorite(favId)
+      setFavoriteItems([...favoriteItems.toSpliced(foundItem.index, 1)])
+
+    } else {
+      item['favId'] = favId
+      item['type'] = type
+      item['favorited_at'] = new Date().toISOString()
+      await addFavorite(favId, item)
+      setFavoriteItems([...favoriteItems, item])
+    }
+  }
+
+  const scrollToTop = () => {
+    if (chatViewRef.current) {
+      chatViewRef.current.scrollTop = chatViewRef.current.scrollHeight
+    }
   }
 
   const inputMessageHandler = e => {
@@ -67,38 +112,52 @@ export default function Home() {
 
   const renderContent = data => {
     if (!data) return null
-
     if (!data.content) return null
 
     if (data.content['errors']) {
       return <span>Sorry, I don't understand.</span>
     }
 
+    const favoriteIds = favoriteItems.map(item => item['favId'])
+
+    if (data.type === CONTENT_TYPE.error) {
+      console.log(data.content)
+      return <span>Something wrong happened</span>
+    }
     if (data.type === CONTENT_TYPE.text) {
       return <span>{typeof data.content === 'string' ? data.content : JSON.stringify(data.content)}</span>
     }
     if (data.type === CONTENT_TYPE.flights) {
-      return <FlightView responseContent={data.content}/>
+      return <FlightView responseType={data.type} responseContent={data.content}
+                         favoriteIds={favoriteIds} toggleFavorite={toggleFavorite}/>
     }
     if (data.type === CONTENT_TYPE.hotels) {
-      return <HotelsView responseContent={data.content}/>
+      return <HotelsView responseType={data.type} responseContent={data.content}
+                         favoriteIds={favoriteIds} toggleFavorite={toggleFavorite}/>
     }
-    if (data.type === CONTENT_TYPE.activities) {
-      return <ActivitiesView responseContent={data.content}/>
+    if (data.type === CONTENT_TYPE.attractions || data.type === CONTENT_TYPE.restaurants) {
+      return <ActivitiesView responseType={data.type} responseContent={data.content}
+                             favoriteIds={favoriteIds} toggleFavorite={toggleFavorite}/>
+    }
+  }
+
+  const renderFavoriteItem = data => {
+    if (data['type'] === CONTENT_TYPE.flights) {
+      return <FlightItem key={data['id']} item={data} itemType={data['type']} isFavorite={true}
+                         toggleFavorite={toggleFavorite}/>
+    } else if (data['type'] === CONTENT_TYPE.hotels) {
+      return <HotelItem key={data['id']} item={data} itemType={data['type']}
+                        isFavorite={true} toggleFavorite={toggleFavorite}/>
+    } else if (data['type'] === CONTENT_TYPE.attractions || data['type'] === CONTENT_TYPE.restaurants) {
+      return <ActivitiesItem key={data['id']} item={data} itemType={data['type']}
+                             isFavorite={true} toggleFavorite={toggleFavorite}/>
     }
   }
 
   return (
     <div className={_.travelPage}>
-      <div className={_.headerContainer}>
-        <img src="favicon.ico" className={_.headerIcon}/>
-        <span className={_.headerTitle}>Little Fish</span>
-        <div className={_.toolbarContainer}>
-          <button className={_.toolbarButton + ' icon-heart'} onClick={toggleSidebar}/>
-        </div>
-      </div>
       <div className={_.mainContent}>
-        <div className={_.chatContainer}>
+        <div className={_.chatContainer} ref={chatViewRef}>
           {chatMessages ? chatMessages.map((item, index) =>
             <div key={index}
                  className={_.chatItem + ' ' + (item.role === 'user' ? _.chatItem__user : _.chatItem__server)}>
@@ -112,19 +171,58 @@ export default function Home() {
             <img src="loading.gif" className={_.processingGif}/>
           </div>}
         </div>
-        <div className={_.inputContainer}>
+        <div className={chatMessages.length === 0 ? _.inputContainer__float : _.inputContainer}>
           {/*form submit he thong mac dinh kem an enter*/}
           <form onSubmit={sendMessage}>
             {/*placeholder: chu chim ben duoi*/}
+            {chatMessages.length === 0 ? <div className={_.messageTitle}>What can I help with?</div> : null}
             <input className={_.messageTextbox} placeholder='Enter your prompt here'
                    value={inputMessage} onChange={inputMessageHandler}/>
             <button className={_.sendButton + ' icon-arrow-up-circle'} type='submit' disabled={!inputMessage}/>
           </form>
         </div>
       </div>
+      <div className={_.headerContainer}>
+        <img src="favicon.ico" className={_.headerIcon}/>
+        <span className={_.headerTitle}>Little Fish</span>
+        <div className={_.toolbarContainer}>
+          <button className={_.toolbarButton} onClick={toggleSidebar}>
+            <span className='icon-heart'/>
+            {favoriteItems.length > 0 ? <span className={_.favoriteNumText}>{favoriteItems.length}</span> : null}
+          </button>
+        </div>
+      </div>
       <div className={showSidebar ? _.sidebarContainer : _.sidebarContainer__collapsed}>
         <button className={_.toolbarButton + ' icon-x'} onClick={toggleSidebar}/>
+        <div className={_.favoritesContainer}>
+          {(!favoriteItems || favoriteItems.length === 0) ?
+            <div className='empty-view'>
+              <div className='empty-title'>No Favorites Yet</div>
+              <div className='empty-message'>Click <span className='icon-heart'/> button to add a favorite.</div>
+            </div>
+            :
+            favoriteItems.map(renderFavoriteItem)
+          }
+        </div>
       </div>
     </div>
   );
+}
+
+
+async function loadFavorites() {
+  const res = await getFbDocs(mainDatabase, [CONFIG.FAVORITES_COL])
+  const favorites = []
+  res.forEach(r => {
+    favorites.push(r.data())
+  })
+  return favorites.sort((a, b) => a['favorited_at'] - b['favorited_at'])
+}
+
+async function addFavorite(favId, item) {
+  await setFbDoc(mainDatabase, [CONFIG.FAVORITES_COL, favId], item)
+}
+
+async function removeFavorite(favId) {
+  await deleteFbDoc(mainDatabase, [CONFIG.FAVORITES_COL, favId])
 }
