@@ -43,7 +43,7 @@ class AmadeusService:
         # 'expires_in': 1799, 'state': 'approved', 'scope': ''}
 
     def get_flights(self, originLocationCode, destinationLocationCode, departureDate, adults=1,
-                    returnDate=None, travelClass='ECONOMY', nonStop=False, currencyCode='EUR', max=20
+                    returnDate=None, travelClass='ECONOMY', nonStop=False, currencyCode='VND', max=20
                     ):
         token = self._get_token()
 

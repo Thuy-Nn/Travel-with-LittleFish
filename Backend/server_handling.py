@@ -3,17 +3,26 @@ import json
 from database.Database import Database
 from models import OpenAIModel
 from services import AmadeusService, TripadvisorService
+from utils.time import iso8601_to_minutes
 
 
 def filter_flights(response_data, limit=10):
     returned_data = []
 
     for d in response_data:
-        returned_data.append({
+        filter_item = {
             'id': d['id'],
-            'itineraries': [itiner['duration'] for itiner in d['itineraries']],
             'price': d['price']['grandTotal'],
-        })
+            'durationInMinutes': 0,
+            'numberOfStops': 0
+        }
+
+        for itiner in d['itineraries']:
+            filter_item['durationInMinutes'] += iso8601_to_minutes(itiner['duration'])
+            for seg in itiner['segments']:
+                filter_item['numberOfStops'] += seg['numberOfStops']
+
+        returned_data.append(filter_item)
 
     return returned_data[:limit]
 
@@ -31,7 +40,7 @@ def filter_hotels(response_data, limit=10):
         if 'overallRating' in d:
             item['rating'] = d['overallRating']
 
-        returned_data.append(item) # ham gan, bo sung item them vao
+        returned_data.append(item)  # ham gan, bo sung item them vao
 
     return returned_data[:limit]
 
@@ -163,9 +172,8 @@ def process_response(llm_response):
         if llm_response['function_name'] in ['get_hotels', 'get_places']:
             function_output = [{
                 'id': k,
-                **v # copy v
+                **v  # copy v
             } for k, v in function_output.items()]
-
 
         output_response = {
             'type': function_to_call['type'],
@@ -185,9 +193,7 @@ if __name__ == '__main__':
     # response = model.invoke('Show me top hotels in paris from 25.01.2025 to 27.01.2025')
     # response = model.invoke('Analyze top 1 cheapest hotels')
     # response = model.invoke('Hotels in Hanoi from 20.02 to 24.02.2025 for 1 adult')
-    response = model.invoke('show me attractions in Seoul')
+    # response = model.invoke('show me attractions in Seoul')
+    response = model.invoke('Analyze top 3 best flights')
     output = process_response(response)
-    json.dump(output, open('output/activities.json', 'w'))
-
-
-
+    json.dump(output, open('output/analyze.json', 'w'))

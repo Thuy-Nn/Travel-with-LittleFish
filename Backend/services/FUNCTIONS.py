@@ -83,7 +83,7 @@ FUNCTIONS = {
                 },
                 "sort_by": {
                     "type": "string",
-                    "description": "Specifies the criterion for sorting items in the list. Valid options are 'price', 'duration', 'rating', or 'distance'."
+                    "description": "Specifies the criterion for sorting items in the list. Valid options are 'price', 'duration', 'rating', 'distance', or 'best_value'."
                 },
                 "sort_order": {
                     "type": "string",
