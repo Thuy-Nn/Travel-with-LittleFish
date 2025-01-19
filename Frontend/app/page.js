@@ -8,9 +8,10 @@ import ActivitiesView, {ActivitiesItem} from '@/app/components/ActivitiesView'
 import HotelsView, {HotelItem} from '@/app/components/HotelsView'
 import {CONFIG} from '@/app/const/CONFIG'
 import {deleteFbDoc, getFbDocs, mainDatabase, setFbDoc} from '@/app/fb'
-// import responseData from '@/app/data/activities.json'
+// import responseData from '@/app/data/analyze.json'
 
 import {findItemInArray} from '@/app/utils/tools'
+import {formatPrice, convertPrice} from '@/app/utils/price'
 
 
 export default function Home() {
@@ -154,6 +155,21 @@ export default function Home() {
     }
   }
 
+  const calculateTotalPrice = () => {
+    let total = 0
+    const currency = 'EUR'
+
+    for (let f of favoriteItems) {
+      if (f['type'] === 'flights') {
+        total += convertPrice(parseFloat(f['price']['grandTotal']), f['price']['currency'])
+      } else if (f['type'] === 'hotels') {
+        total += convertPrice(parseFloat(f['offer']['price']['total']), f['offer']['price']['currency'])
+      }
+    }
+
+    return formatPrice(total, currency)
+  }
+
   return (
     <div className={_.travelPage}>
       <div className={_.mainContent}>
@@ -193,7 +209,6 @@ export default function Home() {
         </div>
       </div>
       <div className={showSidebar ? _.sidebarContainer : _.sidebarContainer__collapsed}>
-        <button className={_.toolbarButton + ' icon-x'} onClick={toggleSidebar}/>
         <div className={_.favoritesContainer}>
           {(!favoriteItems || favoriteItems.length === 0) ?
             <div className='empty-view'>
@@ -203,6 +218,11 @@ export default function Home() {
             :
             favoriteItems.map(renderFavoriteItem)
           }
+        </div>
+        <div className={_.totalPriceContainer}>
+          <button className={_.sidebarCloseButton + ' icon-x'} onClick={toggleSidebar}/>
+          <span className={_.totalPriceText}>Total Price:</span>
+          <span className={_.totalPrice}>{calculateTotalPrice()}</span>
         </div>
       </div>
     </div>
@@ -216,7 +236,13 @@ async function loadFavorites() {
   res.forEach(r => {
     favorites.push(r.data())
   })
-  return favorites.sort((a, b) => a['favorited_at'] - b['favorited_at'])
+  return favorites.sort((a, b) => {
+    const dateA = new Date(a['favorited_at'])
+    const dateB = new Date(b['favorited_at'])
+    if (dateA < dateB) return -1
+    if (dateA > dateB) return 1
+    return 0
+  })
 }
 
 async function addFavorite(favId, item) {

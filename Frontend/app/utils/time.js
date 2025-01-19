@@ -8,8 +8,3 @@ export function formatTime(dateTime) {
     minute: '2-digit'
   })
 }
-
-export function formatPrice(value, currency, location) {
-  const userLocale = navigator.language || 'en-US'
-  return Intl.NumberFormat(userLocale, {style: 'currency', currency,  currencyDisplay: 'symbol'}).format(value)
-}

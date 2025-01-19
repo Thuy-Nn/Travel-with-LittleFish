@@ -1,5 +1,6 @@
 import _ from '../styles/FlightView.module.css'
-import {formatDuration, formatPrice, formatTime} from '@/app/utils/time'
+import {formatDuration, formatTime} from '@/app/utils/time'
+import {formatPrice} from '@/app/utils/price'
 import {formatAirport} from '@/app/utils/airport'
 
 

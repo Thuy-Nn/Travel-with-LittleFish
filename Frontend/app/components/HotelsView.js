@@ -1,6 +1,6 @@
 import _ from '../styles/HotelsView.module.css'
 import StarRating from '@/app/components/StarRating'
-import {formatPrice} from '@/app/utils/time'
+import {formatPrice} from '@/app/utils/price'
 
 export default function HotelsView({responseType, responseContent, max = 10, favoriteIds, toggleFavorite}) {
   if (!responseContent) return null

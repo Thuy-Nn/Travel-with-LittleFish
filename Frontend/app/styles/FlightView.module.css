@@ -22,7 +22,6 @@
     /*width: 30%;*/
     box-sizing: border-box;
     vertical-align: middle;
-    padding: 0 12px;
     text-align: right;
 }
 
@@ -53,11 +52,11 @@
 }
 
 .flightCarrier {
-    width: 25%;
+    width: 20%;
 }
 
 .flightTime {
-    width: 50%;
+    width: 55%;
 }
 
 .flightDuration {
@@ -90,14 +89,14 @@
 .flightDuration {
     display: inline-block;
     box-sizing: border-box;
-    font-weight: bold;
-    text-align: center;
+    /*font-weight: bold;*/
+    text-align: right;
 }
 
 .flightPrice {
     font-weight: bold;
-    font-size: x-large;
-    color: var(--accent-color);
+    font-size: 1.2em;
+    /*color: var(--accent-color);*/
 }
 
 .flightIcon {

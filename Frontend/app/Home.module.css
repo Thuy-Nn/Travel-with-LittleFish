@@ -195,16 +195,52 @@ focus: chuot o dau no sang mau luon
     border-left: 1px solid rgba(100, 100, 100, 0.2);
     box-shadow: -4px 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: transform 0.3s;
-    overflow: auto; /* enable scrollbar */
-    scrollbar-color: var(--border-color) var(--background--color);
 }
 
 .sidebarContainer__collapsed {
     transform: translateX(var(--sidebar-width));
 }
 
+.sidebarCloseButton {
+    position: absolute;
+    left: 12px;
+    font-size: 1.8em;
+}
+
 .favoritesContainer {
-    margin-top: 12px;
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing);
+    overflow: auto; /* enable scrollbar */
+    scrollbar-color: var(--border-color) var(--background--color);
+}
+
+.totalPriceContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--border-color);
+    text-align: right;
+    padding: 10px 12px;
+}
+
+.totalPriceText {
+    margin-right: 8px;
+    vertical-align: middle;
+    color: var(--dim-foreground-color);
+}
+
+.totalPrice {
+    vertical-align: middle;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--accent-color);
 }
 
 
