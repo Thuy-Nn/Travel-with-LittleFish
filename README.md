@@ -9,14 +9,14 @@ Exhaustive experiments around the following use cases were performed:
 - Can the AI Assistant get the best choice flights, hotels?
 - Can the AI assistant bookmark favorite choices, create a prepared list for travel, and calculate the total price for the trip?
 
-![overview](overview.png)
+![overview](images_results/overview.png)
 
 # Demo
 ### Online
 Go to https://little-fish.dttt.io for the live demo.
 Scan the QR code below for quick access.
 
-![QR Code](qrcode.png)
+![QR Code](images_results/qrcode.png)
 
 
 ### Local
