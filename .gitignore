@@ -2,3 +2,4 @@ Learn
 .idea
 **/*.json
 firebase-key.json
+backend/config.yaml
