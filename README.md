@@ -73,7 +73,7 @@ python invoke.py --message "Where to eat in Berlin?"
 ## Restaurants
 
 ![restaurants](images_results/restaurants.png)
-![hotels](images_results/hotels_analyze.png)
+![hotels](images_results/restaurants_analyze.png)
 
 ## Attractions
 
