@@ -1,7 +1,5 @@
 # Introduction
-This project aims at developing an AI-based travel assistant the supports users by using a natural language interface. This App is like a Chatbot and response Request from user about Flights, Hotels, Attractions, Restaurants.
-
-The architecture of the implemented system is depicted in figure 1. Detailed description of used components can be found in explanations of use cases, tasks, and experiments.
+This project aims at developing an AI-based travel assistant the supports users by using a natural language interface. This app works like a chatbot, helping users find flights, hotels, attractions, and restaurants effortlessly.
 
 Exhaustive experiments around the following use cases were performed:
 - Can the AI Assistant get Information about Flights, Hotels, Attractions, Restaurants base on specific date?
@@ -9,6 +7,7 @@ Exhaustive experiments around the following use cases were performed:
 - Can the AI Assistant get the best choice flights, hotels?
 - Can the AI assistant bookmark favorite choices, create a prepared list for travel, and calculate the total price for the trip?
 
+### System Overview
 ![overview](images_results/overview.png)
 
 # Demo
@@ -74,7 +73,7 @@ python invoke.py --message "Where to eat in Berlin?"
 ## Restaurants
 
 ![restaurants](images_results/restaurants.png)
-![hotels](images_results/hotels_analyze.png)
+![hotels](images_results/restaurants_analyze.png)
 
 ## Attractions
 

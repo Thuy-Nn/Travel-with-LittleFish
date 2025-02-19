@@ -77,8 +77,8 @@ def process_response(llm_response):
                 'type': 'text',
                 'content': 'Sorry, there is no content to analyze.'
             }
-        else:
-            last_data = last_data[0]
+            
+        last_data = last_data[0]
 
         print('Analyze the last data:', last_data['created_at'])
 

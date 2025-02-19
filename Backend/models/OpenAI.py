@@ -29,7 +29,7 @@ class OpenAIModel(BaseModel):
         response = self.client.chat.completions.create(
             model=self.name,
             messages=[
-                {'role': 'system', 'content': 'You are a helpful assistant that '},
+                {'role': 'system', 'content': 'You are a helpful assistant.'},
                 {'role': 'user', 'content': prompt}
             ],
             tools=tools
