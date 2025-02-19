@@ -34,14 +34,6 @@ class AmadeusService:
         json.dump(token_data, open(token_file, 'w'))
         return token_data['access_token']
 
-        # {'type': 'amadeusOAuth2Token',
-        # 'username': 'amadeus@dttt.io',
-        # 'application_name': 'Travel Companion',
-        # 'client_id': 'Vjynx6MxNZySZ3k5F7OW5LHWe4F5lBsI',
-        # 'token_type': 'Bearer',
-        # 'access_token': 'FFBjfAhXBZmUoNK51wqqsayvwyke',
-        # 'expires_in': 1799, 'state': 'approved', 'scope': ''}
-
     def get_flights(self, originLocationCode, destinationLocationCode, departureDate, adults=1,
                     returnDate=None, travelClass='ECONOMY', nonStop=False, currencyCode='VND', max=20
                     ):

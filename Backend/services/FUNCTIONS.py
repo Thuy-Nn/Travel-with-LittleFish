@@ -23,7 +23,7 @@ FUNCTIONS = {
                 },
                 "returnDate": {
                     "type": "string",
-                    "description": "Dates are specified in the ISO 8601 YYYY-MM-DD format, e.g. 2018-02-28"
+                    "description": "Dates are specified in the ISO 8601 YYYY-MM-DD format, e.g. 2018-02-28."
                 }
             }
         },
@@ -44,11 +44,11 @@ FUNCTIONS = {
                 },
                 "checkInDate": {
                     "type": "string",
-                    "description": "Check-in date of the stay (hotel local date). Format YYYY-MM-DD. The lowest accepted value is the present date (no dates in the past)."
+                    "description": "Check-in date of the stay (hotel local date). Format YYYY-MM-DD. The lowest accepted value is the present date (no dates in the past). If Dates were the past, prompt the user to provide it."
                 },
                 "checkOutDate": {
                     "type": "string",
-                    "description": "Check-out date of the stay (hotel local date). Format YYYY-MM-DD. The lowest accepted value is checkInDate+1."
+                    "description": "Check-out date of the stay (hotel local date). Format YYYY-MM-DD. The lowest accepted value is checkInDate+1. If Dates were the past, prompt the user to provide it."
                 }
             }
         },
@@ -65,7 +65,7 @@ FUNCTIONS = {
                 },
                 "category": {
                     "type": "string",
-                    "description": "Filters result set based on property type. Valid options are 'attractions' or 'restaurants'"
+                    "description": "Filters result set based on property type. Valid options are 'attractions' or 'restaurants'. If the input is 'visit', return 'attractions'."
                 }
             }
         },

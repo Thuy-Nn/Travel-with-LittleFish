@@ -31,6 +31,7 @@ class BaseModel:
         Edge cases you must handle:
         - If there are no functions that match the user request, you will respond politely that you cannot help.
         - If a required argument is missing, prompt the user to provide it. This step is crucial.
+        - If the dates are in the past, prompt the user to provide an updated date. This step is crucial.
         """
 
         return self._invoke(sys_prompt, functions)

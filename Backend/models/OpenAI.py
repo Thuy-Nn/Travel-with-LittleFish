@@ -1,16 +1,22 @@
 import yaml
-from openai import OpenAI
+# from openai import OpenAI
 from models.BaseModel import BaseModel
+from openai import AzureOpenAI
 
 
 class OpenAIModel(BaseModel):
-    def __init__(self, name='gpt-4o-mini-2024-07-18'):
+    def __init__(self, name='gpt-4o'):
         super().__init__(name)
         self.config = yaml.safe_load(open('config.yaml'))
 
     def _load_model(self):
         super()._load_model()
-        self.model = OpenAI(api_key=self.config['KEYS']['openai'])
+        # self.model = OpenAI(api_key=self.config['KEYS']['openai'])
+        endpoint = self.config['KEYS']['azure_openai_endpoint']
+        key = self.config['KEYS']['azure_openai_key']
+        api_version = '2023-07-01-preview'  # gpt-4o
+        # api_version = '2024-09-12' # gpt-o1-mini
+        self.client = AzureOpenAI(azure_endpoint=endpoint, api_key=key, api_version=api_version)
 
     def _invoke(self, prompt, functions=None):
         tools = None
@@ -20,7 +26,7 @@ class OpenAIModel(BaseModel):
                 "function": f
             } for f in functions]
 
-        response = self.model.chat.completions.create(
+        response = self.client.chat.completions.create(
             model=self.name,
             messages=[
                 {'role': 'system', 'content': 'You are a helpful assistant that '},

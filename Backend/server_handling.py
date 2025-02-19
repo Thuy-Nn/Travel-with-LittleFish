@@ -151,13 +151,13 @@ def process_response(llm_response):
             }
         }
 
-        # print("llm_response:", llm_response['function_name'])
+        print("llm_response:", llm_response['function_name'])
         function_to_call = function_lookup[llm_response['function_name']]
-        # print("function_to_call", function_to_call)
+        print("function_to_call", function_to_call)
+        # check function_args
         function_output = function_to_call['function'](**function_args)
         # print("function_to_call['function']:", function_to_call['function'])
 
-        print(function_to_call)
         print(function_output)
 
         if 'error_at' in function_output:
@@ -194,6 +194,6 @@ if __name__ == '__main__':
     # response = model.invoke('Analyze top 1 cheapest hotels')
     # response = model.invoke('Hotels in Hanoi from 20.02 to 24.02.2025 for 1 adult')
     # response = model.invoke('show me attractions in Seoul')
-    response = model.invoke('Analyze top 3 best flights')
+    response = model.invoke('where can i visit in berlin?')
     output = process_response(response)
     json.dump(output, open('output/analyze.json', 'w'))
