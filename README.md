@@ -47,8 +47,8 @@ python invoke.py --message "Where to eat in Berlin?"
 
 # Some prompts to try
 ### To query information from external APIs
-- "Show me flights from Berlin to Seoul from 25.02 to 28.02.2025"
-- "Where to stay in Seoul from 25.02 to 28.02.2025?"
+- "Show me flights from Berlin to Seoul from 25.06 to 28.06.2025"
+- "Where to stay in Seoul from 25.06 to 28.06.2025?"
 - "Show me some places to visit in Seoul"
 - "Where to eat in Tokyo?"
 ### To analyze data from database. Always start the prompt with "Analyze"
