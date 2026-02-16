@@ -21,12 +21,12 @@ import {
 } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDDVr9aNHfzx-I7KhtJk-tat_r2U04i-9E",
-  authDomain: "chat-bot-app-681b2.firebaseapp.com",
-  projectId: "chat-bot-app-681b2",
-  storageBucket: "chat-bot-app-681b2.firebasestorage.app",
-  messagingSenderId: "1019860614396",
-  appId: "1:1019860614396:web:dc49882b4986c7b3d56b79"
+  apiKey: ,
+  authDomain:,
+  projectId:,
+  storageBucket: ,
+  messagingSenderId: ,
+  appId: 
 };
 
 // Initialize Firebase
